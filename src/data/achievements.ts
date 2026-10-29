@@ -1,0 +1,362 @@
+// Achievements and Certifications data
+export interface Achievement {
+  id: string;
+  title: string;
+  issuer: string;
+  date: string; // Format: "Month YYYY"
+  description?: string;
+  link?: string; // Link to certificate or details
+  credentialId?: string; // Credential ID for verification
+  linkedInPost?: string; // LinkedIn post link for awards
+  badgeImage?: string; // Optional badge/logo image
+  category?: "certification" | "award" | "publication"; // Optional categorization
+  detailedDescription?: string; // Full detailed description for modal
+  achievements?: string[]; // Key achievements or highlights
+  teamMembers?: string[]; // Team members involved
+}
+
+export const achievements: Achievement[] = [
+  // CERTIFICATIONS - Oldest first
+  {
+    id: "cert-1",
+    title: "Fundamentals of Digital Marketing",
+    issuer: "Google Digital Garage",
+    date: "August 2021",
+    description: "Certification in digital marketing fundamentals including SEO, SEM, and analytics.",
+    link: "https://learndigital.withgoogle.com/link/JZF776CNN",
+    category: "certification",
+  },
+  {
+    id: "cert-2",
+    title: "Python for Beginners",
+    issuer: "University of Moratuwa",
+    date: "August 2022",
+    description: "Foundational Python programming course for beginners.",
+    link: "https://verify.skillsnetwork.site/certificates/LCeE52AVmM",
+    category: "certification",
+  },
+  {
+    id: "cert-3",
+    title: "HackerRank Python (Basic)",
+    issuer: "HackerRank",
+    date: "August 2022",
+    description: "Certified in Python programming basics and data structures.",
+    link: "https://www.hackerrank.com/certificates/EDB60DBDF7F9",
+    category: "certification",
+  },
+  {
+    id: "cert-4",
+    title: "Web Design for Beginners",
+    issuer: "University of Moratuwa",
+    date: "September 2022",
+    description: "Completed web design fundamentals covering HTML, CSS, and responsive design.",
+    link: "https://verify.skillsnetwork.site/certificates/nqB7IJDlwu",
+    category: "certification",
+  },
+  {
+    id: "cert-5",
+    title: "Sololearn - Python for Beginners",
+    issuer: "Sololearn",
+    date: "November 2022",
+    description: "Completed Python fundamentals course for beginners.",
+    link: "https://www.sololearn.com/certificates/CC-5T4OVSGS",
+    category: "certification",
+  },
+  {
+    id: "cert-6",
+    title: "Sololearn - JavaScript",
+    issuer: "Sololearn",
+    date: "November 2022",
+    description: "Completed JavaScript programming course covering ES6+ features.",
+    link: "https://www.sololearn.com/certificates/CC-UIREWII9",
+    category: "certification",
+  },
+  {
+    id: "cert-7",
+    title: "Sololearn - HTML",
+    issuer: "Sololearn",
+    date: "November 2022",
+    description: "Completed HTML fundamentals course for web development.",
+    link: "https://www.sololearn.com/certificates/CC-O1AEMK3A",
+    category: "certification",
+  },
+  {
+    id: "cert-8",
+    title: "Microcontroller-Based Embedded System Design",
+    issuer: "University of Moratuwa",
+    date: "January 2023",
+    description: "Learned ESP32, IoT, C++, Node-RED, PCB Design, and EasyEDA for embedded systems.",
+    link: "https://www.linkedin.com/",
+    category: "certification",
+  },
+  {
+    id: "cert-9",
+    title: "Python Programming",
+    issuer: "University of Moratuwa",
+    date: "July 2023",
+    description: "Comprehensive Python programming course covering advanced concepts.",
+    link: "https://verify.skillsnetwork.site/certificates/uF842Z8eqy",
+    category: "certification",
+  },
+  
+  // AWARDS
+  {
+    id: "award-1",
+    title: "HackX 2023 - Semi Finalist",
+    issuer: "University of Kelaniya",
+    date: "September 2023",
+    description: "Led Team BioNex to semi-finals in my first hackathon experience at HackX 2023.",
+    linkedInPost: "https://www.linkedin.com/",
+    detailedDescription: "Advanced to the semi-finals at HackX 2023, organized by University of Kelaniya. This was my first hackathon experience, and leading Team BioNex to the semi-finals marked an important milestone in my journey as a developer and team leader.",
+    achievements: [
+      "First hackathon experience",
+      "Led team to semi-finals",
+      "Developed innovative solution",
+      "Gained valuable hackathon experience",
+      "Built foundation for future competitions"
+    ],
+    teamMembers: ["Team BioNex"],
+    category: "award",
+  },
+  {
+    id: "cert-10",
+    title: "Sololearn - Introduction to Java",
+    issuer: "Sololearn",
+    date: "January 2024",
+    description: "Completed Java programming course covering OOP concepts and syntax.",
+    link: "https://www.sololearn.com/certificates/CC-WG5KTBTN",
+    category: "certification",
+  },
+  {
+    id: "cert-11",
+    title: "HackerRank Problem Solving (Basic)",
+    issuer: "HackerRank",
+    date: "March 2024",
+    description: "Certified in basic problem-solving and algorithmic thinking.",
+    link: "https://www.hackerrank.com/certificates/D1444658A975",
+    category: "certification",
+  },
+  {
+    id: "cert-12",
+    title: "HackerRank Java (Basic)",
+    issuer: "HackerRank",
+    date: "March 2024",
+    description: "Certified in Java programming fundamentals and problem solving.",
+    link: "https://www.hackerrank.com/certificates/AC0E2903CFE8",
+    category: "certification",
+  },
+  {
+    id: "cert-13",
+    title: "SLIIT AI/ML Engineer - Stage 1",
+    issuer: "SLIIT (Sri Lanka Institute of Information Technology)",
+    date: "May 2024",
+    description: "Foundation AI and Machine Learning engineering certification from SLIIT.",
+    link: "https://verify.skillsnetwork.site/certificates/aonah5ukku",
+    category: "certification",
+  },
+  {
+    id: "cert-14",
+    title: "Postman API Fundamentals Student Expert",
+    issuer: "Postman",
+    date: "May 2024",
+    description: "Certified in API testing, development, and documentation using Postman.",
+    link: "https://badgr.com/public/assertions/6649c2d0adcc4c0ea221b2db",
+    category: "certification",
+  },
+  {
+    id: "cert-15",
+    title: "Introduction to Large Language Models",
+    issuer: "Google Cloud",
+    date: "May 2024",
+    description: "Introduction to Large Language Models (LLMs) and their applications.",
+    link: "https://www.linkedin.com/",
+    category: "certification",
+  },
+  {
+    id: "cert-16",
+    title: "Introduction to Generative AI",
+    issuer: "Google Cloud",
+    date: "May 2024",
+    description: "Foundational understanding of Generative AI concepts and applications.",
+    link: "https://www.linkedin.com/",
+    category: "certification",
+  },
+  {
+    id: "award-2",
+    title: "CodeStorm 2024 - Finalist (19th Place)",
+    issuer: "Yarl IT Hub",
+    date: "August 2024",
+    description: "Led Team Bughugs to 19th place among 54 finalists and 42nd in prelims (100+ teams).",
+    linkedInPost: "https://www.linkedin.com/",
+    detailedDescription: "Led Team Bughugs to a strong 19th place finish among 54 finalists at CodeStorm 2024, organized by Yarl IT Hub. Out of over 100 teams in preliminaries, we secured 42nd place to advance to finals, demonstrating consistent competitive programming performance.",
+    achievements: [
+      "Qualified from 100+ teams in preliminaries (42nd place)",
+      "Advanced to finals with 54 competing teams",
+      "Achieved 19th place in final round",
+      "Led team through multiple competition rounds",
+      "Solved complex algorithmic challenges under pressure"
+    ],
+    teamMembers: ["Team Bughugs"],
+    category: "award",
+  },
+  {
+    id: "cert-17",
+    title: "AWS Foundations of Prompt Engineering",
+    issuer: "Amazon Web Services (AWS)",
+    date: "September 2024",
+    description: "Learned prompt engineering with Amazon Bedrock, Generative AI, and Amazon Q.",
+    link: "https://www.linkedin.com/",
+    category: "certification",
+  },
+  {
+    id: "award-3",
+    title: "YarlXtreme 2024 - 3rd Place",
+    issuer: "IEEE Student Branch University of Jaffna",
+    date: "October 2024",
+    description: "Achieved 3rd place with Team Jokers at YarlXtreme 2024 hackathon.",
+    linkedInPost: "https://www.linkedin.com/",
+    detailedDescription: "Secured 3rd place at YarlXtreme 2024, an intensive hackathon organized by IEEE Student Branch at University of Jaffna. Team Jokers built an impressive solution that showcased technical prowess and innovative problem-solving.",
+    achievements: [
+      "Won 3rd place among competing teams",
+      "Developed complete solution within hackathon timeframe",
+      "Collaborated with talented team members",
+      "Demonstrated technical and presentation skills"
+    ],
+    teamMembers: ["Team Jokers"],
+    category: "award",
+  },
+  {
+    id: "cert-18",
+    title: "Pieces GenAI 101",
+    issuer: "Pieces for Developers",
+    date: "November 2024",
+    description: "Certification in Generative AI fundamentals and practical applications.",
+    link: "https://academy.pieces.app/certificate/6741f1f043453f06d98fd371",
+    category: "certification",
+  },
+  {
+    id: "cert-19",
+    title: "SLIIT AI/ML Engineer - Stage 2",
+    issuer: "SLIIT (Sri Lanka Institute of Information Technology)",
+    date: "December 2024",
+    description: "Advanced AI and Machine Learning engineering certification from SLIIT.",
+    link: "https://verify.skillsnetwork.site/certificates/fywnzewr0m",
+    category: "certification",
+  },
+  {
+    id: "cert-20",
+    title: "AWS Certified Cloud Practitioner",
+    issuer: "Amazon Web Services (AWS)",
+    date: "August 2026",
+    description: "Demonstrates foundational cloud fluency and comprehensive knowledge of AWS Cloud concepts, core services, security, architecture, pricing, and support models.",
+    link: "https://www.credly.com/badges/40a967e4-7032-439c-b4e4-03c661daf89f",
+    category: "certification",
+  },
+  {
+    id: "cert-21",
+    title: "AWS New Voices 2026",
+    issuer: "Amazon Web Services (AWS)",
+    date: "September 2026",
+    description: "Successfully completed the 5-week AWS New Voices 2026 speaker development programme covering technical public speaking, breathing exercises, lightning talks, audience engagement, and community leadership.",
+    link: "https://builder.aws.com/content/3JMn8wlkp2akhBOsrbsB4wFmDm1/from-practice-to-the-stage-my-aws-new-voices-2026-journey",
+    category: "certification",
+  },
+  
+  // PUBLICATIONS
+  {
+    id: "pub-1",
+    title: "Tech Meetups in Sri Lanka",
+    issuer: "Kananiyam 2025 Vol. 06 (Computer Society Magazine)",
+    date: "February 2025",
+    description: "Article published on pages 38-39 (hardcopy) and 44-45 (softcopy) about the tech meetup culture in Sri Lanka. Kananiyam returned after 6 years, celebrating 30 years of CompSoc UoJ.",
+    link: "https://www.linkedin.com/",
+    category: "publication",
+  },
+  {
+    id: "pub-2",
+    title: "PyWhatKit: Automate WhatsApp with Python",
+    issuer: "IEEENews@UoJ Annual Newsletter 2023 Vol. III",
+    date: "June 2025",
+    description: "Article published on page 25 (ISSN 2806-531X) about automating WhatsApp using Python's PyWhatKit library.",
+    link: "https://www.linkedin.com/",
+    category: "publication",
+  },
+  {
+    id: "award-4",
+    title: "UOJ Coders v4.0 - Finalist",
+    issuer: "Computer Science Department, University of Jaffna",
+    date: "August 2025",
+    description: "Qualified as a finalist in UOJ Coders v4.0 competitive programming challenge.",
+    linkedInPost: "https://www.linkedin.com/",
+    detailedDescription: "Advanced to the finals of UOJ Coders v4.0, a prestigious competitive programming challenge organized by the Computer Science Department at University of Jaffna. Competed against talented programmers and solved challenging algorithmic problems.",
+    achievements: [
+      "Qualified for finals round",
+      "Solved challenging data structures and algorithms problems",
+      "Demonstrated strong competitive programming skills",
+      "Represented programming excellence"
+    ],
+    category: "award",
+  },
+  {
+    id: "award-5",
+    title: "Coderally 6.0 Intermediate Tier - Finalist",
+    issuer: "IEEE Computer Society IIT",
+    date: "September 2025",
+    description: "Reached finals with Team Flux Fighters at Coderally 6.0 Intermediate Tier.",
+    linkedInPost: "https://www.linkedin.com/",
+    detailedDescription: "Qualified as a finalist in Coderally 6.0 Intermediate Tier, a competitive programming competition organized by IEEE Computer Society IIT. Team Flux Fighters demonstrated strong problem-solving skills and algorithmic thinking throughout the competition.",
+    achievements: [
+      "Qualified for finals in intermediate tier",
+      "Solved complex algorithmic challenges",
+      "Competed against top programming teams",
+      "Demonstrated teamwork and coding efficiency"
+    ],
+    teamMembers: ["Team Flux Fighters"],
+    category: "award",
+  },
+  {
+    id: "award-6",
+    title: "HackForce 25 - Winners",
+    issuer: "Yarl Salesforce Ohana",
+    date: "September 2025",
+    description: "Won 1st place with Team Code Rangers at HackForce 25 hackathon.",
+    linkedInPost: "https://www.linkedin.com/",
+    detailedDescription: "Secured 1st place at HackForce 25, a prestigious hackathon organized by Yarl Salesforce Ohana. Our team, Code Rangers, developed an innovative solution that impressed the judges with its creativity, technical excellence, and practical implementation.",
+    achievements: [
+      "Developed innovative solution under time constraints",
+      "Collaborated effectively with team members",
+      "Presented solution to panel of industry experts",
+      "Won 1st place among competing teams"
+    ],
+    teamMembers: ["Team Code Rangers"],
+    category: "award",
+  },
+  {
+    id: "award-7",
+    title: "Best Performing Project Coordinator - 2025/26",
+    issuer: "IEEE Young Professionals Sri Lanka",
+    date: "February 2026",
+    description: "Awarded Best Performing Project Coordinator - 2025/26 by IEEE Young Professionals Sri Lanka for exceptional leadership and coordination.",
+    detailedDescription: "Recognised as the Best Performing Project Coordinator - 2025/26 by IEEE Young Professionals Sri Lanka for outstanding contribution, teamwork, and project execution across volunteer initiatives.",
+    achievements: [
+      "Awarded Best Performing Project Coordinator - 2025/26",
+      "Recognised for exceptional volunteer leadership and milestone delivery",
+      "Coordinated cross-functional teams and operational logistics"
+    ],
+    category: "award",
+  },
+  {
+    id: "award-8",
+    title: "UOJ Coders 5.0 - Finalist",
+    issuer: "Computer Science Department, University of Jaffna",
+    date: "2026",
+    description: "Two-time UOJ Coders Finalist, qualifying as a finalist in UOJ Coders 5.0 (2026) following UOJ Coders v4.0.",
+    detailedDescription: "Qualified as a finalist in UOJ Coders 5.0 (2026), marking a consecutive achievement as a Two-time UOJ Coders Finalist (v4.0 & 5.0) in the premier competitive programming contest at University of Jaffna.",
+    achievements: [
+      "Two-time UOJ Coders Finalist (UOJ Coders v4.0 & UOJ Coders 5.0)",
+      "Solved advanced algorithmic problems under timed competitive settings",
+      "Ranked among top programming finalists"
+    ],
+    category: "award",
+  },
+];
