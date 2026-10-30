@@ -35,7 +35,9 @@ export const CameraRig: React.FC<CameraRigProps> = ({ activeIsland, showHero = f
     }
   }, [activeIsland, showHero]);
 
-  // Hook into OrbitControls start event so viewer manual drag immediately takes control
+  // Hook into OrbitControls events:
+  // - on start: viewer manual drag immediately takes control
+  // - on change: sync touch pinch zoom with zoomStore for full mobile gesture compatibility
   useEffect(() => {
     const controls = controlsRef.current;
     if (!controls) return;
@@ -43,11 +45,23 @@ export const CameraRig: React.FC<CameraRigProps> = ({ activeIsland, showHero = f
     const onUserStart = () => {
       isTransitioning.current = false;
     };
+
+    const onControlsChange = () => {
+      if (!activeIsland && controls.object) {
+        const dist = controls.object.position.distanceTo(controls.target);
+        if (Math.abs(dist - zoomStore.getTargetZoomDist()) > 1.2) {
+          zoomStore.setTargetZoomDist(Math.max(22, Math.min(78, dist)));
+        }
+      }
+    };
+
     controls.addEventListener('start', onUserStart);
+    controls.addEventListener('change', onControlsChange);
     return () => {
       controls.removeEventListener('start', onUserStart);
+      controls.removeEventListener('change', onControlsChange);
     };
-  }, []);
+  }, [activeIsland]);
 
   useFrame((state, delta) => {
     const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024;
@@ -185,13 +199,14 @@ export const CameraRig: React.FC<CameraRigProps> = ({ activeIsland, showHero = f
       rotateSpeed={0.8}
       enablePan={true}
       panSpeed={0.7}
-      enableZoom={activeIsland !== null}
-      minDistance={12}
-      maxDistance={120}
+      enableZoom={true}
+      minDistance={18}
+      maxDistance={80}
       minPolarAngle={Math.PI / 12} // Allows looking from high overhead (X-axis elevation ~15 deg)
       maxPolarAngle={Math.PI / 2 + 0.04} // Prevents dipping below low cloud sea
       enableDamping={true}
       dampingFactor={0.06}
+      touches={{ ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN }}
     />
   );
 };

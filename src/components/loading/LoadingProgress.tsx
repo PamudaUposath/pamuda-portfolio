@@ -24,13 +24,13 @@ export const LoadingProgress: React.FC<LoadingProgressProps> = ({ progress }) =>
         </div>
 
         {/* Numeric Percentage */}
-        <div className="font-mono font-bold text-xs sm:text-sm text-sky-200 min-w-[3rem] text-right drop-shadow-[0_0_8px_rgba(56,189,248,0.5)]">
+        <div className="font-mono font-bold text-xs sm:text-sm text-sky-200 min-w-[3rem] text-right drop-shadow-[0_2px_6px_rgba(0,0,0,0.65)]">
           {clampedProgress}%
         </div>
       </div>
 
       {/* 2. Subtitle Below Bar */}
-      <div className="text-xs sm:text-sm font-display font-medium text-slate-200 tracking-wide flex items-center gap-2">
+      <div className="text-xs sm:text-sm font-display font-semibold text-white tracking-wide flex items-center gap-2 drop-shadow-[0_2px_6px_rgba(0,0,0,0.65)]">
         <span>Loading Pamuda's World...</span>
         <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping inline-block" />
       </div>

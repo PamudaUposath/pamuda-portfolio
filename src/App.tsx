@@ -15,14 +15,37 @@ import { CloudJournalModal } from './components/ui/CloudJournalModal';
 import { EasterEggModal } from './components/ui/EasterEggModal';
 import { LoadingScreen } from './components/ui/LoadingScreen';
 import { CloudCursor } from './components/interactive/CloudCursor';
+import { NavigationTourModal } from './components/navigation/NavigationTourModal';
 import type { IslandId, ViewMode, CloudTheme } from './types';
 import { ISLANDS } from './data/islands';
 import { getTimezoneBasedTheme } from './utils/themeTime';
 
 export function App() {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [viewMode, setViewMode] = useState<ViewMode>('3d');
-  const [showHero, setShowHero] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const p = new URLSearchParams(window.location.search);
+      if (p.get('mode') === '2d' || p.get('mode') === '3d' || p.get('modal') || p.get('island')) {
+        return false;
+      }
+    }
+    return true;
+  });
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    if (typeof window !== 'undefined') {
+      const p = new URLSearchParams(window.location.search);
+      if (p.get('mode') === '2d') return '2d';
+    }
+    return '3d';
+  });
+  const [showHero, setShowHero] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const p = new URLSearchParams(window.location.search);
+      if (p.get('mode') === '2d' || p.get('mode') === '3d' || p.get('modal') || p.get('island')) {
+        return false;
+      }
+    }
+    return true;
+  });
   const [activeIsland, setActiveIsland] = useState<IslandId | null>(null);
   const [hoveredIsland, setHoveredIsland] = useState<IslandId | null>(null);
 
@@ -34,6 +57,15 @@ export function App() {
   const [isJournalOpen, setIsJournalOpen] = useState<boolean>(false);
   const [isEasterEggOpen, setIsEasterEggOpen] = useState<boolean>(false);
   const [isNavWheelOpen, setIsNavWheelOpen] = useState<boolean>(false);
+  const [isTourOpen, setIsTourOpen] = useState<boolean>(false);
+
+  // Check if first-time visitor to offer interactive 3D navigation tour
+  const [hasSeenTour, setHasSeenTour] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('cloudverse_navigation_tour_seen') === 'true';
+    }
+    return true;
+  });
 
   // Check if any popup or modal dialog is currently open on top of the 3D scene
   const isAnyModalOpen =
@@ -113,12 +145,17 @@ Welcome to my world!`;
       setIsLoading(false);
     }
     const modalParam = params.get('modal');
-    if (modalParam === 'skills') setIsSkillsConsoleOpen(true);
-    if (modalParam === 'journal') setIsJournalOpen(true);
-    if (modalParam === 'cv') setIsCVOpen(true);
-    if (modalParam === 'game') setIsGameOpen(true);
-    if (modalParam === 'journey') setIsJourneyOpen(true);
-    if (modalParam === 'easteregg') setIsEasterEggOpen(true);
+    if (modalParam) {
+      setIsLoading(false);
+      setShowHero(false);
+      if (modalParam === 'skills') setIsSkillsConsoleOpen(true);
+      if (modalParam === 'journal') setIsJournalOpen(true);
+      if (modalParam === 'cv') setIsCVOpen(true);
+      if (modalParam === 'game') setIsGameOpen(true);
+      if (modalParam === 'journey') setIsJourneyOpen(true);
+      if (modalParam === 'easteregg') setIsEasterEggOpen(true);
+      if (modalParam === 'tour') setIsTourOpen(true);
+    }
 
     // Periodically sync theme if timezone hour rolls over into next phase (every minute)
     const timeSyncInterval = setInterval(() => {
@@ -197,7 +234,7 @@ Welcome to my world!`;
     };
   }, [isAudioPlaying]);
 
-  const handleSelectIsland = (id: IslandId) => {
+  const handleSelectIsland = (id: IslandId | null) => {
     setActiveIsland(id);
     setShowHero(false);
   };
@@ -205,6 +242,18 @@ Welcome to my world!`;
   const handleEnter3D = () => {
     setShowHero(false);
     setViewMode('3d');
+    // If first-time visitor enters 3D mode, launch the navigation tour automatically
+    if (!hasSeenTour) {
+      setIsTourOpen(true);
+      setHasSeenTour(true);
+    }
+  };
+
+  const handleStartTour = () => {
+    setShowHero(false);
+    setViewMode('3d');
+    setIsTourOpen(true);
+    setHasSeenTour(true);
   };
 
   const handleEnter2D = () => {
@@ -217,7 +266,7 @@ Welcome to my world!`;
     : null;
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden font-body text-slate-100 bg-slate-950">
+    <div className={`relative w-full ${viewMode === '3d' ? 'h-screen overflow-hidden' : 'min-h-screen'} font-body text-slate-100 bg-slate-950`}>
       {/* Loading Screen with WebGL Fallback and Skip-to-2D */}
       {isLoading && (
         <LoadingScreen
@@ -230,29 +279,32 @@ Welcome to my world!`;
         />
       )}
 
-      {/* Top Navigation HUD */}
-      <CloudNavbar
-        viewMode={viewMode}
-        onToggleViewMode={() => setViewMode(viewMode === '3d' ? '2d' : '3d')}
-        activeIsland={activeIsland}
-        onSelectIsland={handleSelectIsland}
-        onOpenGame={() => setIsGameOpen(true)}
-        onOpenJourney={() => setIsJourneyOpen(true)}
-        onToggleHero={() => setShowHero(!showHero)}
-        showHero={showHero}
-        isIncidentActive={isIncidentActive}
-        isResolved={isResolved}
-        isAudioPlaying={isAudioPlaying}
-        isAudioMuted={isAudioMuted}
-        onToggleAudio={toggleAudio}
-        onReplayAudio={replayAudio}
-        onToggleMute={toggleMute}
-        theme={theme}
-        onThemeChange={handleThemeChange}
-        onOpenSkillsConsole={() => setIsSkillsConsoleOpen(true)}
-        onOpenJournal={() => setIsJournalOpen(true)}
-        onOpenCV={() => setIsCVOpen(true)}
-      />
+      {/* Top Navigation HUD (3D Mode Only) */}
+      {viewMode === '3d' && (
+        <CloudNavbar
+          viewMode={viewMode}
+          onToggleViewMode={() => setViewMode('2d')}
+          activeIsland={activeIsland}
+          onSelectIsland={handleSelectIsland}
+          onOpenGame={() => setIsGameOpen(true)}
+          onOpenJourney={() => setIsJourneyOpen(true)}
+          onToggleHero={() => setShowHero(!showHero)}
+          showHero={showHero}
+          isIncidentActive={isIncidentActive}
+          isResolved={isResolved}
+          isAudioPlaying={isAudioPlaying}
+          isAudioMuted={isAudioMuted}
+          onToggleAudio={toggleAudio}
+          onReplayAudio={replayAudio}
+          onToggleMute={toggleMute}
+          theme={theme}
+          onThemeChange={handleThemeChange}
+          onOpenSkillsConsole={() => setIsSkillsConsoleOpen(true)}
+          onOpenJournal={() => setIsJournalOpen(true)}
+          onOpenCV={() => setIsCVOpen(true)}
+          onOpenTour={() => setIsTourOpen(true)}
+        />
+      )}
 
       {/* VIEW MODE 1: 3D CLOUDVERSE EXPLORER */}
       {viewMode === '3d' && (
@@ -286,20 +338,23 @@ Welcome to my world!`;
               onEnter3D={handleEnter3D}
               onEnter2D={handleEnter2D}
               onOpenJourney={() => setIsJourneyOpen(true)}
+              onStartTour={handleStartTour}
             />
           )}
 
           {/* Radial Navigation Wheel (Active in 3D Mode, Left Side) */}
           {!showHero && (
             <CloudNavigationWheel
+              isOpen={isNavWheelOpen}
+              onOpenChange={setIsNavWheelOpen}
               onSelectIsland={handleSelectIsland}
               onReturnOverview={() => setActiveIsland(null)}
               onOpenSkillsConsole={() => setIsSkillsConsoleOpen(true)}
               onOpenGame={() => setIsGameOpen(true)}
               onOpenCV={() => setIsCVOpen(true)}
               onOpenJournal={() => setIsJournalOpen(true)}
+              onOpenTour={() => setIsTourOpen(true)}
               activeIsland={activeIsland}
-              onOpenChange={setIsNavWheelOpen}
             />
           )}
 
@@ -313,10 +368,10 @@ Welcome to my world!`;
 
           {/* Bottom Right: Single Dedicated Play CloudOps Game Button */}
           {!showHero && (
-            <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 select-none pointer-events-auto">
+            <div className="fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-40 select-none pointer-events-auto">
               <button
                 onClick={() => setIsGameOpen(true)}
-                className={`glass-panel px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl border shadow-xl flex items-center gap-2.5 transition-all duration-300 group hover:scale-105 active:scale-95 ${
+                className={`glass-panel p-2.5 sm:px-4 sm:py-3 rounded-2xl border shadow-xl flex items-center gap-2.5 transition-all duration-300 group hover:scale-105 active:scale-95 ${
                   isResolved
                     ? 'bg-emerald-950/80 text-emerald-300 border-emerald-500/50 hover:bg-emerald-900/90 shadow-emerald-500/20'
                     : isIncidentActive
@@ -350,9 +405,9 @@ Welcome to my world!`;
             </div>
           )}
 
-          {/* Island Detail Drawer */}
+          {/* Island Detail Drawer (suppressed while navigation tour is active so background remains clear) */}
           <IslandModal
-            islandId={activeIsland}
+            islandId={!isTourOpen ? activeIsland : null}
             onClose={() => setActiveIsland(null)}
             onOpenJourney={() => {
               setActiveIsland(null);
@@ -431,6 +486,13 @@ Welcome to my world!`;
       <JourneyModal
         isOpen={isJourneyOpen}
         onClose={() => setIsJourneyOpen(false)}
+      />
+
+      {/* Guided 3D Navigation Tour for 1st-Time Visitors & Mobile Exploration */}
+      <NavigationTourModal
+        isOpen={isTourOpen}
+        onClose={() => setIsTourOpen(false)}
+        onSelectIsland={handleSelectIsland}
       />
     </div>
   );

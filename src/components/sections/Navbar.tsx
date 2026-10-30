@@ -79,28 +79,44 @@ export const Navbar: React.FC<NavbarProps> = ({ onSwitchTo3D }) => {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            <span
-              className={`w-6 h-0.5 bg-dark transition-all ${
-                isMobileMenuOpen ? "rotate-45 translate-y-2" : ""
-              }`}
-            ></span>
-            <span
-              className={`w-6 h-0.5 bg-dark transition-all ${
-                isMobileMenuOpen ? "opacity-0" : ""
-              }`}
-            ></span>
-            <span
-              className={`w-6 h-0.5 bg-dark transition-all ${
-                isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""
-              }`}
-            ></span>
-          </button>
+          {/* Mobile Right Controls: 3D World Button + Hamburger Menu */}
+          <div className="lg:hidden flex items-center gap-2 shrink-0">
+            {onSwitchTo3D && (
+              <button
+                onClick={onSwitchTo3D}
+                className="h-9 px-3 relative inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 text-white text-xs font-bold shadow-md shadow-sky-500/25 hover:shadow-sky-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all ring-2 ring-sky-400/80"
+                title="Enter Pamuda's 3D Cloud World"
+                aria-label="Enter 3D World"
+              >
+                <span className="text-xs">🌍</span>
+                <span className="tracking-wide">3D World</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
+              </button>
+            )}
+
+            {/* Mobile Menu Button */}
+            <button
+              className="w-9 h-9 flex flex-col items-center justify-center gap-1.5 rounded-xl hover:bg-slate-100 transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              <span
+                className={`w-5 h-0.5 bg-dark transition-all ${
+                  isMobileMenuOpen ? "rotate-45 translate-y-2" : ""
+                }`}
+              ></span>
+              <span
+                className={`w-5 h-0.5 bg-dark transition-all ${
+                  isMobileMenuOpen ? "opacity-0" : ""
+                }`}
+              ></span>
+              <span
+                className={`w-5 h-0.5 bg-dark transition-all ${
+                  isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""
+                }`}
+              ></span>
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}

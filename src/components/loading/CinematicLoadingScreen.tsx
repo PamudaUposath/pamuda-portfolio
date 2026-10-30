@@ -81,7 +81,7 @@ export const CinematicLoadingScreen: React.FC<CinematicLoadingScreenProps> = ({
         <div className="pt-1">
           <button
             onClick={onSkipTo2D}
-            className="group px-4 py-1.5 rounded-full bg-slate-950/60 hover:bg-slate-900/80 border border-white/10 hover:border-sky-400/40 text-xs text-slate-300 hover:text-white transition-all flex items-center gap-1.5 shadow-lg backdrop-blur-md hover:scale-105 active:scale-95"
+            className="group px-4 py-1.5 rounded-full bg-slate-950/80 hover:bg-slate-900 border border-white/20 hover:border-sky-400/50 text-xs font-semibold text-slate-100 hover:text-white transition-all flex items-center gap-1.5 shadow-xl hover:scale-105 active:scale-95 drop-shadow-[0_2px_6px_rgba(0,0,0,0.65)]"
             title="Open 2D Executive Portfolio"
           >
             <span>Skip 3D and View Portfolio</span>

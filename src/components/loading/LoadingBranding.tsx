@@ -21,15 +21,15 @@ export const LoadingBranding: React.FC = () => {
 
       {/* 2. Heading: Pamuda's World */}
       <div className="space-y-1.5 px-4">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold font-display tracking-tight drop-shadow-md">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold font-display tracking-tight drop-shadow-[0_3px_10px_rgba(0,0,0,0.7)]">
           <span className="text-white">Pamuda's </span>
-          <span className="text-sky-400 drop-shadow-[0_0_20px_rgba(56,189,248,0.6)]">
+          <span className="text-sky-400 drop-shadow-[0_0_20px_rgba(56,189,248,0.7)]">
             World
           </span>
         </h1>
 
         {/* 3. Approved Tagline */}
-        <p className="text-xs sm:text-sm md:text-base text-slate-200 font-medium tracking-wide max-w-xl mx-auto drop-shadow">
+        <p className="text-xs sm:text-sm md:text-base text-slate-100 font-bold tracking-wide max-w-xl mx-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
           Building Software. Exploring Cloud. Learning Reliability.
         </p>
       </div>

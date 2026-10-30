@@ -55,7 +55,7 @@ export const CloudBottomDock: React.FC<CloudBottomDockProps> = ({
   return (
     <nav
       aria-label="Secondary Island Navigation Dock"
-      className="fixed bottom-4 inset-x-0 z-40 flex justify-center px-4 pointer-events-none select-none"
+      className="hidden md:flex fixed bottom-4 inset-x-0 z-40 justify-center px-4 pointer-events-none select-none"
     >
       <div
         ref={scrollRef}

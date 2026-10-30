@@ -22,6 +22,7 @@ import {
   Gamepad2,
   Compass,
   FileText,
+  ChevronUp,
 } from 'lucide-react';
 import type { IslandId, ViewMode, CloudTheme } from '../../types';
 import { navigationConfig } from '../../data/navigationConfig';
@@ -47,6 +48,7 @@ interface CloudNavbarProps {
   onOpenSkillsConsole?: () => void;
   onOpenJournal?: () => void;
   onOpenCV?: () => void;
+  onOpenTour?: () => void;
 }
 
 export const CloudNavbar: React.FC<CloudNavbarProps> = ({
@@ -67,8 +69,15 @@ export const CloudNavbar: React.FC<CloudNavbarProps> = ({
   theme = 'sunrise',
   onThemeChange,
   onOpenCV,
+  onOpenTour,
 }) => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const p = new URLSearchParams(window.location.search);
+      return p.get('navmenu') === 'open';
+    }
+    return false;
+  });
 
   // Icon mapping for top primary navigation items
   const getNavIcon = (id: IslandId) => {
@@ -237,12 +246,23 @@ export const CloudNavbar: React.FC<CloudNavbarProps> = ({
               )}
             </button>
 
-            {/* View Portfolio Button (Prominent & Accessible, hidden on mobile during welcome to eliminate duplicate clutter) */}
+            {/* Interactive Navigation Tour Button (Desktop/Tablet) */}
+            {onOpenTour && (
+              <button
+                onClick={onOpenTour}
+                className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold glass-panel bg-slate-900/90 hover:bg-slate-800 text-sky-300 hover:text-white border border-sky-400/30 hover:border-sky-400/60 transition-all shadow-md hover:scale-105 active:scale-95 shrink-0"
+                title="Launch Guided 3D Navigation Tour"
+                aria-label="Launch Guided 3D Navigation Tour"
+              >
+                <Compass className="w-3.5 h-3.5 text-sky-400" />
+                <span>Tour</span>
+              </button>
+            )}
+
+            {/* View Portfolio Button (Prominent & Accessible on desktop/tablet, available in bottom menu on mobile) */}
             <button
               onClick={onToggleViewMode}
-              className={`btn-primary text-xs py-2 px-3 sm:px-4 ${
-                showHero ? '!hidden sm:!flex' : 'flex'
-              } items-center gap-1.5 shadow-lg hover:scale-105 active:scale-95 transition-transform shrink-0`}
+              className="hidden md:inline-flex btn-primary text-xs py-2 px-3 sm:px-4 items-center gap-1.5 shadow-lg hover:scale-105 active:scale-95 transition-transform shrink-0"
               title={viewMode === '3d' ? 'Switch to 2D Portfolio Mode' : "Switch to Pamuda's World 3D"}
             >
               <Layout className="w-3.5 h-3.5" />
@@ -251,10 +271,10 @@ export const CloudNavbar: React.FC<CloudNavbarProps> = ({
               </span>
             </button>
 
-            {/* Mobile Menu Hamburger Button */}
+            {/* Desktop Navigation Hamburger (Hidden on mobile since center bottom button is primary) */}
             <button
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-              className="md:hidden p-2 rounded-xl glass-panel border border-white/10 text-slate-200 hover:text-white bg-slate-950/80 shadow"
+              className="hidden p-2 rounded-xl glass-panel border border-white/10 text-slate-200 hover:text-white bg-slate-950/80 shadow"
               title="Open Navigation Menu"
               aria-label="Open Navigation Menu"
             >
@@ -264,17 +284,40 @@ export const CloudNavbar: React.FC<CloudNavbarProps> = ({
         </div>
       </header>
 
-      {/* ==================== MOBILE NAVIGATION DRAWER ==================== */}
+      {/* ==================== MOBILE BOTTOM-CENTER NAVIGATION BUTTON ==================== */}
+      {!showHero && (
+        <div className="fixed bottom-4 inset-x-0 z-40 flex justify-center pointer-events-none md:hidden select-none">
+          <button
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="pointer-events-auto h-12 px-5 rounded-2xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center gap-2.5 shadow-[0_10px_30px_rgba(2,132,199,0.5),0_0_20px_rgba(56,189,248,0.35)] border border-sky-300/60 hover:scale-105 active:scale-95 transition-all ring-2 ring-sky-400/30"
+            title="Open Island Navigation & Menu"
+            aria-label="Open Island Navigation & Menu"
+          >
+            <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+              <Sparkles className="w-3.5 h-3.5 text-white" />
+            </div>
+            <span className="font-display font-bold tracking-wide">Explore Islands</span>
+            <div className="w-5 h-5 rounded-full bg-white/15 flex items-center justify-center text-sky-200">
+              <ChevronUp className="w-3.5 h-3.5" />
+            </div>
+          </button>
+        </div>
+      )}
+
+      {/* ==================== MOBILE NAVIGATION BOTTOM SHEET ==================== */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-[100] md:hidden pointer-events-auto animate-fade-in">
+        <div className="fixed inset-0 z-[140] md:hidden pointer-events-auto animate-fade-in select-none">
           {/* Dimmed Backdrop */}
           <div
-            className="absolute inset-0 bg-slate-950/85 backdrop-blur-md"
+            className="absolute inset-0 bg-slate-950/75"
             onClick={() => setIsMobileMenuOpen(false)}
           />
 
-          {/* Drawer Sheet */}
-          <div className="absolute top-16 inset-x-3 max-h-[85vh] overflow-y-auto glass-panel bg-slate-950/95 border border-sky-400/30 rounded-3xl p-5 shadow-2xl space-y-4">
+          {/* Bottom Sheet Sheet */}
+          <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto glass-panel bg-slate-950/98 border-t border-sky-400/40 rounded-t-[32px] p-5 shadow-[0_-20px_50px_rgba(0,0,0,0.9),0_0_40px_rgba(56,189,248,0.25)] space-y-4">
+            {/* Drag Handle Indicator */}
+            <div className="w-12 h-1.5 rounded-full bg-slate-700/80 mx-auto -mt-1 mb-1" />
+
             <div className="flex items-center justify-between pb-3 border-b border-white/10">
               <div className="flex items-center gap-2">
                 <img src="/favicon.png" alt="Pamuda's P Logo" className="w-5 h-5 object-contain" />
@@ -288,6 +331,34 @@ export const CloudNavbar: React.FC<CloudNavbarProps> = ({
                 <X className="w-5 h-5" />
               </button>
             </div>
+
+            {/* Interactive Tour Action Card (Mobile) */}
+            {onOpenTour && (
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  onOpenTour();
+                }}
+                className="w-full p-3 rounded-2xl bg-gradient-to-r from-sky-500/20 via-blue-600/25 to-indigo-600/20 border border-sky-400/40 text-white flex items-center justify-between group active:scale-[0.98] transition shadow-md"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-sky-500/30 flex items-center justify-center text-sky-300">
+                    <Compass className="w-4 h-4 animate-spin-slow" />
+                  </div>
+                  <div className="text-left">
+                    <div className="text-xs font-bold font-display text-white group-hover:text-sky-200">
+                      Guided 3D Navigation Tour
+                    </div>
+                    <div className="text-[10px] text-sky-300/80 font-mono">
+                      1-minute controls & features tour
+                    </div>
+                  </div>
+                </div>
+                <span className="text-[10px] font-mono font-bold text-sky-300 bg-sky-950/80 px-2 py-1 rounded-lg border border-sky-400/30">
+                  Start
+                </span>
+              </button>
+            )}
 
             {/* Primary Destinations (Top 5) */}
             <div>
@@ -394,6 +465,20 @@ export const CloudNavbar: React.FC<CloudNavbarProps> = ({
                   </button>
                 </div>
               )}
+            </div>
+
+            {/* View Portfolio Mode Switch (Mobile Drawer) */}
+            <div className="pt-2 border-t border-white/10">
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  onToggleViewMode();
+                }}
+                className="w-full py-2.5 px-4 rounded-2xl btn-primary text-xs font-bold flex items-center justify-center gap-2 shadow-lg"
+              >
+                <Layout className="w-4 h-4" />
+                <span>{viewMode === '3d' ? 'Switch to 2D Executive Portfolio' : "Enter Pamuda's World 3D"}</span>
+              </button>
             </div>
 
             {/* Quick Actions in Mobile Drawer */}

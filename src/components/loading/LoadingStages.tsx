@@ -76,12 +76,12 @@ export const LoadingStages: React.FC<LoadingStagesProps> = ({ currentStageIndex 
               {/* Stage Label */}
               <div className="mt-2 space-y-0.5">
                 <span
-                  className={`block text-[10px] sm:text-xs font-semibold leading-tight transition-colors duration-300 ${
+                  className={`block text-[10px] sm:text-xs font-bold leading-tight transition-colors duration-300 drop-shadow-[0_2px_6px_rgba(0,0,0,0.65)] ${
                     isActive
-                      ? 'text-sky-300 font-bold drop-shadow-[0_0_8px_rgba(56,189,248,0.6)]'
+                      ? 'text-sky-300'
                       : isCompleted
-                      ? 'text-slate-200'
-                      : 'text-slate-400'
+                      ? 'text-slate-100'
+                      : 'text-slate-300'
                   }`}
                 >
                   {stage.label}

@@ -204,7 +204,6 @@ html, body {
 
 /* Primary Interactive Buttons */
 .btn-primary {
-  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;

@@ -47,7 +47,8 @@ const Island3DLabel: React.FC<Island3DLabelProps> = ({
   occludeRef,
 }) => {
   const groupRef = useRef<THREE.Group>(null);
-  const [isOccluded, setIsOccluded] = useState<boolean>(false);
+  const [isRaycastOccluded, setIsRaycastOccluded] = useState<boolean>(false);
+  const [isBehindHomeOccluded, setIsBehindHomeOccluded] = useState<boolean>(false);
 
   // Reusable vectors for performance (avoiding GC in 60fps loop)
   const vCamRight = useRef(new THREE.Vector3());
@@ -55,6 +56,8 @@ const Island3DLabel: React.FC<Island3DLabelProps> = ({
   const vCamUp = useRef(new THREE.Vector3());
   const vTargetWorld = useRef(new THREE.Vector3());
   const homeCenter = useRef(new THREE.Vector3(0, 1.8, 0));
+  const vHomeNdc = useRef(new THREE.Vector3());
+  const vLabelNdc = useRef(new THREE.Vector3());
 
   useFrame(({ camera }) => {
     if (!groupRef.current || !groupRef.current.parent) return;
@@ -76,7 +79,7 @@ const Island3DLabel: React.FC<Island3DLabelProps> = ({
     // Determine if this island is located behind Home Island relative to the camera
     const distToCam = camera.position.distanceTo(islandWorldPos);
     const homeDistToCam = camera.position.distanceTo(homeCenter.current);
-    const isBehindHome = !isHomeIsland && distToCam > homeDistToCam + 2.0;
+    const isBehindHome = !isHomeIsland && distToCam > homeDistToCam + 1.6;
 
     // Offsets from island center:
     // When an island is clicked, its label sits behind the island on its back side as an elevated backdrop.
@@ -119,24 +122,45 @@ const Island3DLabel: React.FC<Island3DLabelProps> = ({
     // Convert into parent island group's local coordinate space
     const localTarget = groupRef.current.parent.worldToLocal(vTargetWorld.current.clone());
     groupRef.current.position.lerp(localTarget, 0.25);
+
+    // 2. MATHEMATICAL OCCLUSION DETECTION BEHIND HOME ISLAND & LOTUS TOWER:
+    // User request: "when island behind the home island, that behind island's label also appear behind the 3d objects in the home island"
+    if (!isHomeIsland && isBehindHome && !isActive) {
+      vHomeNdc.current.copy(homeCenter.current).project(camera);
+      vLabelNdc.current.copy(vTargetWorld.current).project(camera);
+
+      // Home Island and Lotus Tower project to a central silhouette in screen space
+      const screenDistX = Math.abs(vLabelNdc.current.x - vHomeNdc.current.x);
+      const isBehindSilhouette =
+        screenDistX < 0.24 &&
+        vLabelNdc.current.y <= vHomeNdc.current.y + 0.38 &&
+        vLabelNdc.current.y >= vHomeNdc.current.y - 0.28;
+
+      if (isBehindSilhouette !== isBehindHomeOccluded) {
+        setIsBehindHomeOccluded(isBehindSilhouette);
+      }
+    } else if (isBehindHomeOccluded) {
+      setIsBehindHomeOccluded(false);
+    }
   });
 
   const isHighlighted = isActive || isHovered;
+  const isOccluded = isRaycastOccluded || isBehindHomeOccluded;
 
   return (
     <group ref={groupRef} position={position}>
       <Html
         center
         distanceFactor={isActive ? 30 : 38}
-        zIndexRange={[20, 5]}
+        zIndexRange={[10, 1]}
         occlude={isHomeIsland || !occludeRef ? undefined : [occludeRef as any]}
-        onOcclude={setIsOccluded}
+        onOcclude={setIsRaycastOccluded}
       >
         <button
           onClick={onClick}
           onPointerOver={onPointerOver}
           onPointerOut={onPointerOut}
-          className={`transition-all duration-200 select-none whitespace-nowrap text-center cursor-pointer rounded-lg border shadow-lg backdrop-blur-sm ${
+          className={`transition-all duration-300 select-none whitespace-nowrap text-center cursor-pointer rounded-lg border shadow-lg backdrop-blur-sm ${
             isOccluded
               ? 'opacity-0 pointer-events-none scale-75'
               : 'opacity-100 pointer-events-auto scale-100'
