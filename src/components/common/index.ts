@@ -5,3 +5,4 @@ export { Card } from "./Card";
 export { SectionHeader } from "./SectionHeader";
 export { Container } from "./Container";
 export { ScrollToTop } from "./ScrollToTop";
+export * from "./Icons";

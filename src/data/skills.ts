@@ -121,11 +121,6 @@ export const skills: SkillCategory = {
     "Quality Assurance",
     "Digital Marketing",
   ],
-  "Music & Arts": [
-    "Violin (Visharad)",
-    "Flute",
-    "Music",
-  ],
   "Sports & Activities": [
     "Rifle Shooting",
     "Chess",

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Container, SectionHeader, Card, Badge } from "../common";
 import { projects, type Project } from "../../data/projects";
+import { getItemDateScore } from "../../utils/sorting";
 import { getAssetPath } from "../../utils/assets";
 
 type FilterCategory = "Mobile" | "Web" | "Cloud" | "IoT";
@@ -26,7 +27,7 @@ export const Projects: React.FC = () => {
     return isNaN(parsed) ? 0 : parsed;
   };
 
-  // Filter and sort projects: Featured projects first, then descending chronological order (newest to oldest)
+  // Filter and sort projects strictly in descending chronological order based on dates
   const filteredProjects = projects
     .filter((project) => {
       const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(project.category as FilterCategory);
@@ -34,13 +35,9 @@ export const Projects: React.FC = () => {
       return categoryMatch && typeMatch;
     })
     .sort((a, b) => {
-      // 1. Featured projects come first
-      if (a.highlight && !b.highlight) return -1;
-      if (!a.highlight && b.highlight) return 1;
-      // 2. Descending by end date/timestamp (newest first)
-      const diff = getProjectTimestamp(b) - getProjectTimestamp(a);
+      // Descending by dates (ongoing / newest completion first)
+      const diff = getItemDateScore(b.endDate, b.startDate, b.ongoing) - getItemDateScore(a.endDate, a.startDate, a.ongoing);
       if (diff !== 0) return diff;
-      // 3. Fallback descending by ID
       return parseInt(b.id, 10) - parseInt(a.id, 10);
     });
 

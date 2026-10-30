@@ -1,0 +1,132 @@
+/* Cinematic Animated Loading Screen Styles */
+
+@keyframes cloudDriftSlow {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-20px, 4px, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes cloudDriftMedium {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(24px, -6px, 0) scale(1.02);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes cloudDriftFast {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-35px, 8px, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes islandFloatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes cyanGlowPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.35), 0 0 30px rgba(56, 189, 248, 0.15);
+    border-color: rgba(56, 189, 248, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(56, 189, 248, 0.65), 0 0 50px rgba(56, 189, 248, 0.3);
+    border-color: rgba(125, 211, 252, 0.9);
+  }
+}
+
+@keyframes starlightShimmer {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@keyframes sunriseFlarePulse {
+  0%, 100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes progressGlowScan {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-cloud-slow {
+  animation: cloudDriftSlow 24s ease-in-out infinite;
+}
+
+.animate-cloud-medium {
+  animation: cloudDriftMedium 18s ease-in-out infinite;
+}
+
+.animate-cloud-fast {
+  animation: cloudDriftFast 14s ease-in-out infinite;
+}
+
+.animate-island-float {
+  animation: islandFloatSlow 7s ease-in-out infinite;
+}
+
+.animate-cyan-glow {
+  animation: cyanGlowPulse 3s ease-in-out infinite;
+}
+
+.animate-starlight {
+  animation: starlightShimmer 4s ease-in-out infinite;
+}
+
+.animate-sunrise-flare {
+  animation: sunriseFlarePulse 6s ease-in-out infinite;
+}
+
+.progress-scan-gradient {
+  background-size: 200% 100%;
+  animation: progressGlowScan 3s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-cloud-slow,
+  .animate-cloud-medium,
+  .animate-cloud-fast,
+  .animate-island-float,
+  .animate-cyan-glow,
+  .animate-starlight,
+  .animate-sunrise-flare,
+  .progress-scan-gradient {
+    animation: none !important;
+  }
+}

@@ -1,21 +1,14 @@
 // Navbar Component - Responsive navigation with smooth scrolling
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Container } from "../common";
 import { siteConfig } from "../../data/siteConfig";
 
-export const Navbar: React.FC = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
+interface NavbarProps {
+  onSwitchTo3D?: () => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ onSwitchTo3D }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // Handle scroll effect
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // Close mobile menu when clicking a link
   const handleNavClick = () => {
@@ -28,26 +21,18 @@ export const Navbar: React.FC = () => {
     { href: "#experience", label: "Experience" },
     { href: "#education", label: "Education" },
     { href: "#opensource", label: "Open Source" },
-    { href: "#skills", label: "Skills" },
     { href: "#achievements", label: "Achievements" },
     { href: "#certifications", label: "Certifications" },
-    { href: "#contact", label: "Contact" },
   ];
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-white shadow-lg py-4"
-          : "bg-transparent py-6"
-      }`}
-    >
-      <Container className="max-w-[90%] !px-4 sm:!px-6 lg:!pr-4">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-sm py-3 border-b border-gray-100 transition-all duration-300">
+      <Container className="max-w-[92%] !px-4 sm:!px-6">
         <div className="flex items-center justify-between">
           {/* Logo/Name */}
           <a
             href="#home"
-            className="text-2xl font-bold text-dark hover:text-primary transition-colors"
+            className="text-2xl font-black text-dark hover:text-primary transition-colors tracking-tight shrink-0"
             onClick={(e) => {
               e.preventDefault();
               window.location.reload();
@@ -59,12 +44,12 @@ export const Navbar: React.FC = () => {
           </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden xl:flex items-right gap-8 ml-auto">
+          <div className="hidden lg:flex items-center gap-6 xl:gap-8 mx-auto">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="text-dark hover:text-primary font-medium transition-colors relative group"
+                className="text-slate-700 hover:text-primary font-medium text-sm transition-colors relative group py-1 whitespace-nowrap"
               >
                 {link.label}
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
@@ -72,17 +57,31 @@ export const Navbar: React.FC = () => {
             ))}
           </div>
 
-          {/* CTA Button (Desktop) */}
-          <a
-            href="#contact"
-            className="hidden xl:inline-flex items-center px-6 py-2 bg-primary text-white font-semibold rounded-lg hover:bg-orange-600 transition-all hover:scale-105 ml-6"
-          >
-            Let's Talk
-          </a>
+          {/* Action Buttons (Desktop): "Let's Talk" and "3D World" with equal width & height */}
+          <div className="hidden lg:flex items-center gap-3.5 shrink-0">
+            <a
+              href="#contact"
+              className="w-[136px] h-10 inline-flex items-center justify-center rounded-xl bg-primary text-white text-sm font-bold shadow-md shadow-orange-500/20 hover:bg-orange-600 hover:shadow-orange-500/35 hover:scale-[1.02] active:scale-[0.98] transition-all"
+            >
+              Let's Talk
+            </a>
+
+            {onSwitchTo3D && (
+              <button
+                onClick={onSwitchTo3D}
+                className="w-[136px] h-10 relative inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 text-white text-sm font-bold shadow-md shadow-sky-500/25 hover:shadow-sky-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all ring-2 ring-sky-400/80"
+                title="Enter Pamuda's 3D Cloud World"
+              >
+                <span className="text-sm">🌍</span>
+                <span className="tracking-wide">3D World</span>
+                <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
+              </button>
+            )}
+          </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="xl:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5"
+            className="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -106,7 +105,7 @@ export const Navbar: React.FC = () => {
 
         {/* Mobile Menu */}
         <div
-          className={`xl:hidden overflow-hidden transition-all duration-300 ${
+          className={`lg:hidden overflow-hidden transition-all duration-300 ${
             isMobileMenuOpen ? "max-h-96 mt-6" : "max-h-0"
           }`}
         >
@@ -121,13 +120,27 @@ export const Navbar: React.FC = () => {
                 {link.label}
               </a>
             ))}
-            <a
-              href="#contact"
-              onClick={handleNavClick}
-              className="inline-flex items-center justify-center px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-orange-600 transition-all"
-            >
-              Let's Talk
-            </a>
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <a
+                href="#contact"
+                onClick={handleNavClick}
+                className="w-full sm:w-1/2 h-11 inline-flex items-center justify-center rounded-xl bg-primary text-white font-bold text-sm shadow-md hover:bg-orange-600 transition-all"
+              >
+                Let's Talk
+              </a>
+              {onSwitchTo3D && (
+                <button
+                  onClick={() => {
+                    handleNavClick();
+                    onSwitchTo3D();
+                  }}
+                  className="w-full sm:w-1/2 h-11 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 text-white font-bold text-sm shadow-md ring-2 ring-sky-400 transition-all"
+                >
+                  <span>🌍 Explore 3D World</span>
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </Container>

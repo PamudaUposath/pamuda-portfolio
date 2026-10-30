@@ -2,13 +2,17 @@
 import React, { useState } from "react";
 import { Container, SectionHeader, Card, Badge } from "../common";
 import { achievements } from "../../data/achievements";
+import { parseDateToScore, sortDescByDate } from "../../utils/sorting";
 
 export const Achievements: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAward, setSelectedAward] = useState<typeof achievements[0] | null>(null);
   
-  // Filter only awards
-  const awards = achievements.filter((item) => item.category === "award").reverse();
+  // Filter awards in strict descending chronological order based on dates
+  const awards = sortDescByDate(
+    achievements.filter((item) => item.category === "award"),
+    (item) => parseDateToScore(item.date)
+  );
 
   const ITEMS_PER_VIEW = 3; // Show 3 awards at a time
   const maxIndex = Math.max(0, awards.length - ITEMS_PER_VIEW);

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Container, SectionHeader, Badge } from "../common";
 import { experiences, type Experience as ExperienceType } from "../../data/experience";
+import { getItemDateScore, sortDescByDate } from "../../utils/sorting";
 
 type FilterCategory = "All" | "Work" | "Leadership" | "Volunteer";
 
@@ -13,15 +14,20 @@ export const Experience: React.FC = () => {
   const [selectedExperience, setSelectedExperience] = useState<ExperienceType | null>(null);
   const sectionRef = React.useRef<HTMLElement>(null);
 
+  // Sort all experiences in descending chronological order based on dates
+  const sortedAllExperiences = sortDescByDate(experiences, (e) =>
+    getItemDateScore(e.endDate, e.startDate)
+  );
+
   // Filter experiences based on selected category
   const filteredExperiences = activeFilter === "All"
-    ? [...experiences].reverse()
-    : experiences.filter((exp) => {
+    ? sortedAllExperiences
+    : sortedAllExperiences.filter((exp) => {
         if (activeFilter === "Work") return exp.type === "work";
         if (activeFilter === "Leadership") return exp.type === "leadership";
         if (activeFilter === "Volunteer") return exp.type === "volunteer";
         return true;
-      }).reverse();
+      });
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredExperiences.length / ITEMS_PER_PAGE);

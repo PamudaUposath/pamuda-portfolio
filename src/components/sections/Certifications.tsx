@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Container, SectionHeader, Card, Badge } from "../common";
 import { achievements } from "../../data/achievements";
+import { parseDateToScore, sortDescByDate } from "../../utils/sorting";
 
 type FilterCategory = "All" | "Certification" | "Publication";
 
@@ -12,10 +13,13 @@ export const Certifications: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const sectionRef = React.useRef<HTMLElement>(null);
 
-  // Get all certifications and publications
-  const allItems = achievements.filter(
-    (item) => item.category === "certification" || item.category === "publication"
-  ).reverse();
+  // Get all certifications and publications in strict descending chronological order based on dates
+  const allItems = sortDescByDate(
+    achievements.filter(
+      (item) => item.category === "certification" || item.category === "publication"
+    ),
+    (item) => parseDateToScore(item.date)
+  );
 
   // Filter based on selected category
   const filteredItems = activeFilter === "All"

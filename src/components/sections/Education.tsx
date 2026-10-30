@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Container, SectionHeader, Card, Badge } from "../common";
 import { educations, type Education as EducationType } from "../../data/education";
+import { getItemDateScore, sortDescByDate } from "../../utils/sorting";
 import { getAssetPath } from "../../utils/assets";
 
 export const Education: React.FC = () => {
@@ -15,9 +16,9 @@ export const Education: React.FC = () => {
           subtitle="My academic journey and qualifications"
         />
 
-        {/* Education Timeline */}
+        {/* Education Timeline (Descending by Date) */}
         <div className="space-y-8">
-          {[...educations].reverse().map((edu, index) => (
+          {sortDescByDate(educations, (e) => getItemDateScore(e.endDate, e.startDate)).map((edu, index) => (
             <EducationCard 
               key={edu.id} 
               education={edu} 

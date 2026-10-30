@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Container, SectionHeader, Card, Badge } from "../common";
 import { openSourceContributions, type OpenSourceContribution } from "../../data/openSource";
+import { getItemDateScore, sortDescByDate } from "../../utils/sorting";
 
 export const OpenSource: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -9,20 +10,23 @@ export const OpenSource: React.FC = () => {
 
   const ITEMS_PER_VIEW = 3; // Show 3 contributions at a time
 
+  const sortedContributions = sortDescByDate(openSourceContributions, (os) =>
+    getItemDateScore(os.endDate, os.startDate, os.status === "active")
+  );
+
   const handlePrevious = () => {
     setCurrentIndex((prev) => 
-      prev === 0 ? openSourceContributions.length - ITEMS_PER_VIEW : prev - 1
+      prev === 0 ? sortedContributions.length - ITEMS_PER_VIEW : prev - 1
     );
   };
 
   const handleNext = () => {
     setCurrentIndex((prev) => 
-      prev >= openSourceContributions.length - ITEMS_PER_VIEW ? 0 : prev + 1
+      prev >= sortedContributions.length - ITEMS_PER_VIEW ? 0 : prev + 1
     );
   };
 
-  const reversedContributions = [...openSourceContributions].reverse();
-  const visibleContributions = reversedContributions.slice(currentIndex, currentIndex + ITEMS_PER_VIEW);
+  const visibleContributions = sortedContributions.slice(currentIndex, currentIndex + ITEMS_PER_VIEW);
 
   return (
     <section id="opensource" className="py-20 bg-lightbg">
