@@ -165,7 +165,7 @@ export const IslandModal: React.FC<IslandModalProps> = ({
             </p>
           </div>
 
-          <button
+          {/* <button
             onClick={onClose}
             className="px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700/60 shadow transition-all flex items-center gap-1.5 shrink-0 hover:scale-105 active:scale-95"
             title="Return to 3D World Overview"
@@ -174,7 +174,7 @@ export const IslandModal: React.FC<IslandModalProps> = ({
             <ArrowLeft className="w-3.5 h-3.5 text-sky-400" />
             <span className="text-xs font-semibold hidden sm:inline">Back to Overview</span>
             <X className="w-3.5 h-3.5 sm:hidden" />
-          </button>
+          </button> */}
         </div>
 
         {/* Body Content */}

@@ -28,10 +28,20 @@ export const CameraRig: React.FC<CameraRigProps> = ({ activeIsland, showHero = f
   // Trigger smooth transition whenever viewer selects an island or returns to overview
   useEffect(() => {
     if (activeIsland !== prevActiveIsland.current || showHero !== prevShowHero.current) {
+      const wasIslandActive = prevActiveIsland.current !== null;
+      const isNowOverview = activeIsland === null;
+
       prevActiveIsland.current = activeIsland;
       prevShowHero.current = showHero;
       isTransitioning.current = true;
       transitionTimer.current = 0;
+
+      // When returning from an active island back to overview, reset to zoomed-out overview distance
+      if (wasIslandActive && isNowOverview) {
+        const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024;
+        const overviewDist = isDesktop ? 54.0 : 62.0;
+        zoomStore.setTargetZoomDist(overviewDist);
+      }
     }
   }, [activeIsland, showHero]);
 
@@ -47,7 +57,7 @@ export const CameraRig: React.FC<CameraRigProps> = ({ activeIsland, showHero = f
     };
 
     const onControlsChange = () => {
-      if (!activeIsland && controls.object) {
+      if (!activeIsland && !isTransitioning.current && controls.object) {
         const dist = controls.object.position.distanceTo(controls.target);
         if (Math.abs(dist - zoomStore.getTargetZoomDist()) > 1.2) {
           zoomStore.setTargetZoomDist(Math.max(22, Math.min(78, dist)));
@@ -106,10 +116,10 @@ export const CameraRig: React.FC<CameraRigProps> = ({ activeIsland, showHero = f
         }
       } else {
         if (isDesktop) {
-          targetPos.current.set(0, 18.5, 48.0);
-          targetLook.current.set(0, 1.6, 0);
+          targetPos.current.set(0, 22.0, 54.0);
+          targetLook.current.set(0, 1.8, 0);
         } else {
-          targetPos.current.set(0, 20.0, 52.0);
+          targetPos.current.set(0, 26.0, 62.0);
           targetLook.current.set(0, 1.8, 0);
         }
       }
@@ -154,7 +164,23 @@ export const CameraRig: React.FC<CameraRigProps> = ({ activeIsland, showHero = f
         targetLook.current.set(0, 2.0, 0);
       }
     } else {
-      targetLook.current.set(0, 1.6, 0);
+      // Returning to / In Overview Mode: Zoom out and view all islands clearly
+      const overviewDist = isDesktop ? 54.0 : 62.0;
+      targetLook.current.set(0, 1.8, 0);
+
+      // Preserve current horizontal viewing direction so transition zooms out smoothly
+      const camOffset = state.camera.position.clone().sub(targetLook.current);
+      camOffset.y = 0;
+      if (camOffset.lengthSq() < 0.1) {
+        camOffset.set(0, 0, 1);
+      }
+      camOffset.normalize();
+
+      const elevation = isDesktop ? 22.0 : 26.0;
+      const horizontalDist = Math.sqrt(Math.max(0, overviewDist * overviewDist - elevation * elevation));
+
+      targetPos.current.copy(targetLook.current).addScaledVector(camOffset, horizontalDist);
+      targetPos.current.y = targetLook.current.y + elevation;
     }
 
     // If transitioning between overview and selected island:

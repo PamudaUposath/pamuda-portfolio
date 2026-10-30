@@ -43,8 +43,8 @@ export function useOrbitTarget(): number {
 }
 
 // Shared state for interactive overview world zooming
-let overviewZoomDist = 51.0;
-let targetZoomDist = 51.0;
+let overviewZoomDist = 54.0;
+let targetZoomDist = 54.0;
 const zoomListeners = new Set<() => void>();
 
 function emitZoomChange() {
